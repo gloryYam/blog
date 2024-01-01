@@ -4,9 +4,16 @@ package com.blog.youngbolg.controller;
 // 서버렌더링 html rendering
 
 import com.blog.youngbolg.request.PostCreate;
+import com.blog.youngbolg.service.PostService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 // SPA -> javascript + <-> API (JSON)
@@ -15,22 +22,20 @@ import java.util.Map;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 public class PostController {
-    // http 요청 메소드
-    //GET, POST, PUT, PATCH, DELETE, CONNECT, OPTIONS, TRACE, PATCH
-    // 글 등록
-    // POST Method
 
+    private final PostService postService;
     /**
      * 1. @RequestParam String tile, @RequestParam String content
      * 2. @RequestParam Map<String, String> prams
      * 3. Dto
      */
     @PostMapping("/posts")
-    public String post(@RequestBody PostCreate params) {
-        log.info("params={}", params.toString());
+    public Map<String, String> post(@RequestBody @Valid PostCreate request) throws Exception {
 
-        return "안녕";
+        postService.write(request);
+        return Map.of();
     }
 }
 
