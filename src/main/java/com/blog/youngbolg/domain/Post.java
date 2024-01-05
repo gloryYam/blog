@@ -25,4 +25,9 @@ public class Post {
         this.title = title;
         this.content = content;
     }
+
+    public void edit(Post postEditor) {
+        title = postEditor.getTitle();
+        content = postEditor.getContent();
+    }
 }

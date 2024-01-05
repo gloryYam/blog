@@ -3,7 +3,6 @@ package com.blog.youngbolg.response;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,17 +17,23 @@ import java.util.List;
  * }
  */
 @Data
+//@JsonInclude(value = JsonInclude.Include.NON_EMPTY) // 비어있지 않은 값만 내보내겠다.
 public class ErrorResponse {
 
     private final String code;
     private final String message;
-    private List<Validation> validations = new ArrayList<>();
+    private List<Validation> validations;
 
     @Builder
-    public ErrorResponse(String code, String message) {
+    public ErrorResponse(String code, String message, Validation validation) {
         this.code = code;
         this.message = message;
+        this.validations = new ArrayList<>();
+        if(validation != null) {
+            this.validations.add(validation);
+        }
     }
+
 
     public void addValidation(String fieldName, String errorMessage) {
         Validation validation = Validation.builder()

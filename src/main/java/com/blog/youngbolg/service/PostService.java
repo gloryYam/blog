@@ -1,14 +1,21 @@
 package com.blog.youngbolg.service;
 
 import com.blog.youngbolg.domain.Post;
+import com.blog.youngbolg.domain.PostEditor;
+import com.blog.youngbolg.exception.PostNotFound;
 import com.blog.youngbolg.repository.PostRepository;
 import com.blog.youngbolg.request.PostCreate;
+import com.blog.youngbolg.request.PostEdit;
+import com.blog.youngbolg.request.PostSearch;
 import com.blog.youngbolg.response.PostResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 @Slf4j
 @Service
@@ -27,18 +34,46 @@ public class PostService {
         return postRepository.save(post);
     }
 
-    // 가능하면 Optional 같은 데이터는 가져와서 바로 꺼내주는 게 좋다.
     public PostResponse get(Long id) {
         Post post = postRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않은 글입니다."));
+                .orElseThrow(PostNotFound::new);
 
-        PostResponse response = PostResponse.builder()
+        return PostResponse.builder()
                 .id(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .build();
 
-        return response;
+    }
+
+    public List<PostResponse> getList(PostSearch postSearch) {
+
+        return postRepository.getList(postSearch).stream()
+                .map(PostResponse::new)
+                .collect(toList());
+    }
+
+    @Transactional
+    public PostResponse edit(Long id, PostEdit postEdit) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(PostNotFound::new);
+
+        PostEditor.PostEditorBuilder postEditorBuilder = postEdit.toEditor();
+        Post postEditor = postEditorBuilder.title(postEdit.getTitle())
+                .content(postEdit.getContent())
+                .build();
+
+        post.edit(postEditor);
+
+        return new PostResponse(post);
+    }
+
+    public void delete(Long id) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(PostNotFound::new);
+
+        // 존재하는 경우
+        postRepository.delete(post);
     }
 }
 
