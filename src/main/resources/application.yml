@@ -1,1 +1,28 @@
+spring:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  data:
+    web:
+      pageable:
+        one-indexed-parameters: true
+        #1부터 시작을 하겠다 기본 값이 false -> 0부터 시작하겠다.
+        default-page-size: 5
+
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/youngblog
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
 

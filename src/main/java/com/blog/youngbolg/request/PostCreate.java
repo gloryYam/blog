@@ -1,5 +1,6 @@
 package com.blog.youngbolg.request;
 
+import com.blog.youngbolg.exception.InvalidRequest;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
@@ -20,4 +21,10 @@ public class PostCreate {
         this.content = content;
     }
 
+    // 던진다.
+    public void validate() {
+        if(title.contains("바보")) {
+            throw new InvalidRequest("title", "제목에 바보를 포함할 수 없습니다.");
+        }
+    }
 }
