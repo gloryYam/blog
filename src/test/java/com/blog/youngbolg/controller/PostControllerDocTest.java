@@ -21,6 +21,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -84,8 +85,9 @@ public class PostControllerDocTest {
                 .andExpect(status().isOk())
                 .andDo(document("post-create",
                         requestFields(
-                                fieldWithPath("title").description("제목"),
-                                fieldWithPath("content").description("내용")
+                                fieldWithPath("title").description("제목")
+                                                .attributes(key("constraint").value("좋은 제목을 입력해 주세요.")),
+                                fieldWithPath("content").description("내용").optional()
                         )
                 ));
     }

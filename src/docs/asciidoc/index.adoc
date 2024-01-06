@@ -1,5 +1,10 @@
 = 블로그 API
-:toc:
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
 
 == 글 단건조회
 
@@ -23,3 +28,4 @@ include::{snippets}/post-create/request-fields.adoc[]
 
 === 응답
 include::{snippets}/post-create/http-response.adoc[]
+

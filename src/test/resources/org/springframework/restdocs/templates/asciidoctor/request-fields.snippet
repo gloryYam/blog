@@ -1,12 +1,10 @@
-    .{{title}}
-        |===
-        |Path|Type|Description|Constraints
-
-    {{#fields}}
-        |{{path}}
-        |{{type}}
-        |{{description}}
-        |{{constraints}}
-
-    {{/fields}}
-        |===
+|===
+|Path|Type|Description|Optional|Constraint
+{{#fields}}
+|{{path}}
+|{{type}}
+|{{description}}
+|{{#optional}}Y{{/optional}}
+|{{#constraint}} {{.}} {{/constraint}}
+{{/fields}}
+|===
