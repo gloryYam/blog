@@ -39,7 +39,7 @@ public class PostController {
 //            throw new InvalidRequest();
 //        }
         request.validate();
-        System.out.println("깃 명령어 테스트");
+        System.out.println("깃 커맨드 명령어 테스트");
 
         return postService.write(request);
     }
