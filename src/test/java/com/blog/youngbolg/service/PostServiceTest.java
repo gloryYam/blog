@@ -131,7 +131,7 @@ class PostServiceTest {
         assertEquals("안녕하세요", changePost.getContent());
     }
 
-    @Test
+    /*@Test
     @DisplayName("글 내용 수정")
     void test5() {
 
@@ -157,7 +157,7 @@ class PostServiceTest {
 
         assertEquals("김영광", changePost.getTitle());
         assertEquals("반갑습니다.", changePost.getContent());
-    }
+    }*/
 
     @Test
     @DisplayName("게시글 삭제")

@@ -56,7 +56,7 @@ public class PostService {
     @Transactional
     public PostResponse edit(Long id, PostEdit postEdit) {
         Post post = postRepository.findById(id)
-                .orElseThrow(PostNotFound::new);
+                .orElseThrow(() -> new PostNotFound());
 
         PostEditor.PostEditorBuilder postEditorBuilder = postEdit.toEditor();
         Post postEditor = postEditorBuilder.title(postEdit.getTitle())
