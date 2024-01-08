@@ -20,10 +20,10 @@ public class ExceptionController {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseBody
     public ErrorResponse invalidRequestHandler(MethodArgumentNotValidException e) {
-            ErrorResponse response = ErrorResponse.builder()
-                    .code("400")
-                    .message("잘못된 요청입니다.")
-                    .build();
+        ErrorResponse response = ErrorResponse.builder()
+                .code("400")
+                .message("잘못된 요청입니다.")
+                .build();
 
 
         for(FieldError fieldErrors : e.getFieldErrors()) {
@@ -52,13 +52,10 @@ public class ExceptionController {
 //            body.addValidation(fieldName, message);
 //        }
 
-        ResponseEntity<ErrorResponse> response = ResponseEntity.status(statusCode)
+        return ResponseEntity.status(statusCode)
                 .body(body);
 
-        return response;
-
     }
-
 }
 
 

@@ -4,6 +4,11 @@ spring:
       enabled: true
       path: /h2-console
 
+
+  output:
+    ansi:
+      enabled: always
+
   data:
     web:
       pageable:
