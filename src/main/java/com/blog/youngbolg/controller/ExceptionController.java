@@ -41,16 +41,8 @@ public class ExceptionController {
         ErrorResponse body = ErrorResponse.builder()
                 .code(String.valueOf(statusCode))
                 .message(e.getMessage())
-                .validation(e.getValidation()) // 추가 ( 아래 if 대체 )
+                .validation(e.getValidation())
                 .build();
-
-        // Exception 마다 각기 다른 구현 사항이 있기 때문에 좋지 못하다.
-//        if(e instanceof InvalidRequest) {
-//            InvalidRequest invalidRequest = (InvalidRequest) e;
-//            String fieldName = invalidRequest.getFieldName();
-//            String message = invalidRequest.getMessage();
-//            body.addValidation(fieldName, message);
-//        }
 
         return ResponseEntity.status(statusCode)
                 .body(body);
