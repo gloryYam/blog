@@ -9,7 +9,6 @@ public class PostNotFound extends YoungBlogException{
 
     public PostNotFound() {
         super(MESSAGE);
-        
     }
 
     @Override

@@ -3,7 +3,6 @@ package com.blog.youngbolg.controller;
 // SSR -> jsp, thymeleaf, mustache, freemarker
 // 서버렌더링 html rendering
 
-import com.blog.youngbolg.domain.Post;
 import com.blog.youngbolg.request.PostCreate;
 import com.blog.youngbolg.request.PostEdit;
 import com.blog.youngbolg.request.PostSearch;
@@ -26,6 +25,17 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
+
+    @GetMapping("/test")
+    public String test() {
+        return "hello";
+    }
+
+    @GetMapping("/glory")
+    public String glory() {
+        return "glory";
+    }
+
     /**
      * 1. @RequestParam String tile, @RequestParam String content
      * 2. @RequestParam Map<String, String> prams
@@ -34,17 +44,14 @@ public class PostController {
      * 메시지를 던지는 연습을 하자
      */
     @PostMapping("/posts")
-    public Post post(@RequestBody @Valid PostCreate request) throws Exception {
-//        if(request.getTitle().contains("바보")){
-//            throw new InvalidRequest();
-//        }
+    public void post(@RequestBody @Valid PostCreate request) throws Exception {
         request.validate();
 
-        return postService.write(request);
+        postService.write(request);
     }
 
     /**
-     *  /posts/{postID} -> 글 한개만 조회
+     * /posts/{postID} -> 글 한개만 조회
      */
     @GetMapping("/posts/{postId}")
     public PostResponse get(@PathVariable Long postId) {
