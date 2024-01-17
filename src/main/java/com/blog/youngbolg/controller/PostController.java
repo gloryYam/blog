@@ -3,6 +3,7 @@ package com.blog.youngbolg.controller;
 // SSR -> jsp, thymeleaf, mustache, freemarker
 // 서버렌더링 html rendering
 
+import com.blog.youngbolg.config.data.UserSession;
 import com.blog.youngbolg.request.PostCreate;
 import com.blog.youngbolg.request.PostEdit;
 import com.blog.youngbolg.request.PostSearch;
@@ -26,14 +27,16 @@ public class PostController {
 
     private final PostService postService;
 
-    @GetMapping("/test")
-    public String test() {
-        return "hello";
+    @GetMapping("/glory")
+    public Long glory(UserSession userSession) {
+        log.info(">>>{}", userSession.id);
+
+        return userSession.id;
     }
 
-    @GetMapping("/glory")
-    public String glory() {
-        return "glory";
+    @GetMapping("/yam")
+    public String yam() {
+        return "인증이 필요 없는 페이지";
     }
 
     /**
