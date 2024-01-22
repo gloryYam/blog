@@ -2,4 +2,4 @@
 
 GET http://localhost:8080/glory
 Content-Type: application/json
-Authorization: asdf
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzA1NjY3OTU5fQ.UXHA8TAynNRdJA9P6XCWHi4UYK3f25FKnuFvteW4vIo

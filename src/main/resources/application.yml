@@ -28,11 +28,11 @@ spring:
         format_sql: true
     defer-datasource-initialization: ture
 
-  sql:
-    init-model: always
-
-
 logging.level:
   org.hibernate.SQL: debug
+
+glory:
+  jwt-Key: "A7CHmMZ/yELDqzbAGac4105ftkVsVHIxF2ad4oywpiQ="
+
 
 

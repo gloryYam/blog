@@ -2,7 +2,7 @@ package com.blog.youngbolg.controller;
 
 import com.blog.youngbolg.domain.Post;
 import com.blog.youngbolg.repository.PostRepository;
-import com.blog.youngbolg.request.PostCreate;
+import com.blog.youngbolg.request.PostCreateReq;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -70,7 +70,7 @@ public class PostControllerDocTest {
     @DisplayName("글 등록")
     void registration() throws Exception {
 
-        PostCreate request = PostCreate.builder()
+        PostCreateReq request = PostCreateReq.builder()
                 .title("ㅎㅇ")
                 .content("내용")
                 .build();

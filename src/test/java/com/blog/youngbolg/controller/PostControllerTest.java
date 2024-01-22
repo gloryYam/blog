@@ -2,7 +2,7 @@ package com.blog.youngbolg.controller;
 
 import com.blog.youngbolg.domain.Post;
 import com.blog.youngbolg.repository.PostRepository;
-import com.blog.youngbolg.request.PostCreate;
+import com.blog.youngbolg.request.PostCreateReq;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -47,7 +47,7 @@ class PostControllerTest {
     @Test
     @DisplayName("/posts 요청시 title 값은 필수다")
     void test1() throws Exception {
-        PostCreate request = PostCreate.builder()
+        PostCreateReq request = PostCreateReq.builder()
                 .content("내용입니다.")
                 .build();
 
@@ -71,7 +71,7 @@ class PostControllerTest {
     @DisplayName("/posts 요청시 db에 값이 저장이 된다.")
     void test2() throws Exception {
 
-        PostCreate request = PostCreate.builder()
+        PostCreateReq request = PostCreateReq.builder()
                 .title("제목입니다.")
                 .content("내용입니다.")
                 .build();
@@ -211,7 +211,7 @@ class PostControllerTest {
     @DisplayName("게시글 작성시 제목에 '바보'는 포함될 수 없다. ")
     void test9() throws Exception {
 
-        PostCreate request = PostCreate.builder()
+        PostCreateReq request = PostCreateReq.builder()
                 .title("나는 바보입니다.")
                 .content("안녕하세요")
                 .build();

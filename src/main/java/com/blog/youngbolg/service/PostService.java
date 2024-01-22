@@ -4,9 +4,9 @@ import com.blog.youngbolg.domain.Post;
 import com.blog.youngbolg.domain.PostEditor;
 import com.blog.youngbolg.exception.PostNotFound;
 import com.blog.youngbolg.repository.PostRepository;
-import com.blog.youngbolg.request.PostCreate;
-import com.blog.youngbolg.request.PostEdit;
-import com.blog.youngbolg.request.PostSearch;
+import com.blog.youngbolg.request.PostCreateReq;
+import com.blog.youngbolg.request.PostEditReq;
+import com.blog.youngbolg.request.PostSearchReq;
 import com.blog.youngbolg.response.PostResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,11 +24,11 @@ public class PostService {
 
     private final PostRepository postRepository;
 
-    public Post write(PostCreate postCreate) {
+    public Post write(PostCreateReq postCreateReq) {
         // postCreate -> Entity
         Post post = Post.builder()
-                .title(postCreate.getTitle())
-                .content(postCreate.getContent())
+                .title(postCreateReq.getTitle())
+                .content(postCreateReq.getContent())
                 .build();
 
         return postRepository.save(post);
@@ -46,15 +46,15 @@ public class PostService {
 
     }
 
-    public List<PostResponse> getList(PostSearch postSearch) {
+    public List<PostResponse> getList(PostSearchReq postSearchReq) {
 
-        return postRepository.getList(postSearch).stream()
+        return postRepository.getList(postSearchReq).stream()
                 .map(PostResponse::new)
                 .collect(toList());
     }
 
     @Transactional
-    public PostResponse edit(Long id, PostEdit postEdit) {
+    public PostResponse edit(Long id, PostEditReq postEdit) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new PostNotFound());
 

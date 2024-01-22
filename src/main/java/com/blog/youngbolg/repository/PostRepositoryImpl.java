@@ -2,7 +2,7 @@ package com.blog.youngbolg.repository;
 
 
 import com.blog.youngbolg.domain.Post;
-import com.blog.youngbolg.request.PostSearch;
+import com.blog.youngbolg.request.PostSearchReq;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -16,11 +16,11 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<Post> getList(PostSearch postSearch) {
+    public List<Post> getList(PostSearchReq postSearchReq) {
         return jpaQueryFactory
                 .selectFrom(post)
-                .limit(postSearch.getSize())
-                .offset(postSearch.getOffset())
+                .limit(postSearchReq.getSize())
+                .offset(postSearchReq.getOffset())
                 .orderBy(post.id.desc())
                 .fetch();
     }

@@ -8,7 +8,7 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public class PostEdit {
+public class PostEditReq {
 
     @NotBlank(message = "타이틀을 입력해주세요.")
     private String title;
@@ -17,7 +17,7 @@ public class PostEdit {
     private String content;
 
     @Builder
-    public PostEdit(String title, String content) {
+    public PostEditReq(String title, String content) {
         this.title = title;
         this.content = content;
     }

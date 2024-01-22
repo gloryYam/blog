@@ -1,9 +1,13 @@
 ### 로그인
-
-POST http://localhost:8080/auth/login
+POST http://localhost:8080/auth/LoginReq
 Content-Type: application/json
 
 {
   "email" : "dudrhkd4179@naver.com",
   "password": "1234"
 }
+
+### 인증 페이지 요청
+GET http://localhost:8080/glory
+Content-Type: application/json
+Cookie: SESSION=882e4540-19e8-497c-98cf-79987c1b5737

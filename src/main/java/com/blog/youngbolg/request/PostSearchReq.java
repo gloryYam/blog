@@ -9,7 +9,7 @@ import static java.lang.Math.*;
 @Getter
 @Setter
 @Builder
-public class PostSearch {
+public class PostSearchReq {
 
     private static final int MAX_SIZE = 2000;
 

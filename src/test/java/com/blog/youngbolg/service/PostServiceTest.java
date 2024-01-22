@@ -3,9 +3,9 @@ package com.blog.youngbolg.service;
 import com.blog.youngbolg.domain.Post;
 import com.blog.youngbolg.exception.PostNotFound;
 import com.blog.youngbolg.repository.PostRepository;
-import com.blog.youngbolg.request.PostCreate;
-import com.blog.youngbolg.request.PostEdit;
-import com.blog.youngbolg.request.PostSearch;
+import com.blog.youngbolg.request.PostCreateReq;
+import com.blog.youngbolg.request.PostEditReq;
+import com.blog.youngbolg.request.PostSearchReq;
 import com.blog.youngbolg.response.PostResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -38,13 +38,13 @@ class PostServiceTest {
     @DisplayName("글 작성")
     void test1() {
         // given
-        PostCreate postCreate = PostCreate.builder()
+        PostCreateReq postCreateReq = PostCreateReq.builder()
                 .title("제목입니다.")
                 .content("내용입니다.")
                 .build();
 
         // when
-        postService.write(postCreate);
+        postService.write(postCreateReq);
 
         // then
         assertEquals(1L, postRepository.count());
@@ -91,12 +91,12 @@ class PostServiceTest {
 
         postRepository.saveAll(requestPosts);
 
-        PostSearch postSearch = PostSearch.builder()
+        PostSearchReq postSearchReq = PostSearchReq.builder()
                 .page(1)
                 .build();
 
         // when
-        List<PostResponse> posts = postService.getList(postSearch);
+        List<PostResponse> posts = postService.getList(postSearchReq);
 
         // then
         assertEquals(10L, posts.size());
@@ -115,7 +115,7 @@ class PostServiceTest {
 
         postRepository.save(post);
 
-        PostEdit postEdit = PostEdit.builder()
+        PostEditReq postEdit = PostEditReq.builder()
                 .title("백엔드")
                 .content("안녕하세요")
                 .build();
@@ -228,7 +228,7 @@ class PostServiceTest {
 
         postRepository.save(post);
 
-        PostEdit postEdit = PostEdit.builder()
+        PostEditReq postEdit = PostEditReq.builder()
                 .title(null)
                 .content("반갑습니다.")
                 .build();

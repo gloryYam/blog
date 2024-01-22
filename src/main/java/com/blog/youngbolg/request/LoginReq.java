@@ -9,7 +9,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Login {
+public class LoginReq {
 
     @NotBlank(message = "이메일을 입력해주세요.")
     private String email;
@@ -17,7 +17,7 @@ public class Login {
     private String password;
 
     @Builder
-    public Login(String email, String password) {
+    public LoginReq(String email, String password) {
         this.email = email;
         this.password = password;
     }

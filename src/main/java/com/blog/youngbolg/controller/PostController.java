@@ -1,12 +1,9 @@
 package com.blog.youngbolg.controller;
 
-// SSR -> jsp, thymeleaf, mustache, freemarker
-// 서버렌더링 html rendering
-
 import com.blog.youngbolg.config.data.UserSession;
-import com.blog.youngbolg.request.PostCreate;
-import com.blog.youngbolg.request.PostEdit;
-import com.blog.youngbolg.request.PostSearch;
+import com.blog.youngbolg.request.PostCreateReq;
+import com.blog.youngbolg.request.PostEditReq;
+import com.blog.youngbolg.request.PostSearchReq;
 import com.blog.youngbolg.response.PostResponse;
 import com.blog.youngbolg.service.PostService;
 import jakarta.validation.Valid;
@@ -16,9 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-// SPA -> javascript + <-> API (JSON)
-// vue -> vue+SSR = nuxt
-// react -> react+SSR - next
 
 @Slf4j
 @RestController
@@ -47,7 +41,7 @@ public class PostController {
      * 메시지를 던지는 연습을 하자
      */
     @PostMapping("/posts")
-    public void post(@RequestBody @Valid PostCreate request) throws Exception {
+    public void post(@RequestBody @Valid PostCreateReq request) throws Exception {
         request.validate();
 
         postService.write(request);
@@ -65,12 +59,12 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public List<PostResponse> getList(@ModelAttribute PostSearch pageable) {
+    public List<PostResponse> getList(@ModelAttribute PostSearchReq pageable) {
         return postService.getList(pageable);
     }
 
     @PatchMapping("/posts/{postId}")
-    public PostResponse edit(@PathVariable Long postId, @RequestBody @Valid PostEdit request) {
+    public PostResponse edit(@PathVariable Long postId, @RequestBody @Valid PostEditReq request) {
         return postService.edit(postId, request);
     }
 

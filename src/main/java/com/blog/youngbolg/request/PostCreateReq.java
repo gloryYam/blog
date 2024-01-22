@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-public class PostCreate {
+public class PostCreateReq {
 
     @NotBlank(message = "타이틀을 입력해주세요.")
     private final String title;
@@ -16,7 +16,7 @@ public class PostCreate {
     private final String content;
 
     @Builder
-    public PostCreate(String title, String content) {
+    public PostCreateReq(String title, String content) {
         this.title = title;
         this.content = content;
     }

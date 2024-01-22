@@ -1,12 +1,12 @@
 package com.blog.youngbolg.repository;
 
 import com.blog.youngbolg.domain.Post;
-import com.blog.youngbolg.request.PostSearch;
+import com.blog.youngbolg.request.PostSearchReq;
 
 import java.util.List;
 
 public interface PostRepositoryCustom {
 
-    List<Post> getList(PostSearch postSearch);
+    List<Post> getList(PostSearchReq postSearchReq);
 
 }
