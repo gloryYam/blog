@@ -1,11 +1,8 @@
 package com.blog.youngbolg.service.auth;
 
-import com.blog.youngbolg.crypto.PasswordEncoder;
-import com.blog.youngbolg.domain.User;
+import com.blog.youngbolg.domain.Account;
 import com.blog.youngbolg.exception.AlreadyExistsEmailException;
-import com.blog.youngbolg.exception.InvalidSignInInformation;
 import com.blog.youngbolg.repository.UserRepository;
-import com.blog.youngbolg.request.LoginReq;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -33,7 +30,7 @@ class AuthServiceTest {
     @DisplayName("회원가입 성공")
     void successSignup() {
         // given
-        User signupReq = User.builder()
+        Account signupReq = Account.builder()
                 .name("김영광")
                 .email("dudrhkd4179@naver.com")
                 .password("1234")
@@ -45,11 +42,11 @@ class AuthServiceTest {
         // then
         assertEquals(1, userRepository.count());
 
-        User user = userRepository.findAll().iterator().next();
-        assertEquals("dudrhkd4179@naver.com", user.getEmail());
-        assertNotNull(user.getPassword());
-        assertNotEquals("1234", user.getPassword());
-        assertEquals("김영광", user.getName());
+        Account account = userRepository.findAll().iterator().next();
+        assertEquals("dudrhkd4179@naver.com", account.getEmail());
+        assertNotNull(account.getPassword());
+        assertNotEquals("1234", account.getPassword());
+        assertEquals("김영광", account.getName());
 
     }
 
@@ -57,73 +54,25 @@ class AuthServiceTest {
     @DisplayName("회원가입시 중복된 이메일")
     void alreadyExistsEmail() {
         // given
-        User user1 = User.builder()
+        Account account1 = Account.builder()
                 .name("김영광")
                 .email("dudrhkd4179@naver.com")
                 .password("1234")
                 .build();
 
-        userRepository.save(user1);
+        userRepository.save(account1);
 
-        User user2 = User.builder()
+        Account account2 = Account.builder()
                 .name("바나나")
                 .email("dudrhkd4179@naver.com")
                 .password("1234")
                 .build();
 
         // when
-        Assertions.assertThrows(AlreadyExistsEmailException.class, () -> authService.signup(user2));
+        Assertions.assertThrows(AlreadyExistsEmailException.class, () -> authService.signup(account2));
 
         // then
         assertEquals(1, userRepository.count());
     }
 
-    @Test
-    @DisplayName("로그인 성공")
-    void successLogin() {
-        PasswordEncoder passwordEncoder = new PasswordEncoder();
-        String passwordEncrypt = passwordEncoder.encrypt("1234");
-        // given
-        User signup = User.builder()
-                .name("김영광")
-                .email("dudrhkd4179@naver.com")
-                .password(passwordEncrypt)
-                .build();
-
-        authService.signup(signup);
-
-        LoginReq login = LoginReq.builder()
-                .email("dudrhkd4179@naver.com")
-                .password("1234")
-                .build();
-        // when
-        Long userId = authService.signin(login);
-
-        // then
-        assertNotNull(userId);
-
-    }
-
-    @Test
-    @DisplayName("비밀번호 틀림")
-    void failLogin() {
-        PasswordEncoder passwordEncoder = new PasswordEncoder();
-        String passwordEncrypt = passwordEncoder.encrypt("1234");
-        // given
-        User signup = User.builder()
-                .name("김영광")
-                .email("dudrhkd4179@naver.com")
-                .password(passwordEncrypt)
-                .build();
-
-        authService.signup(signup);
-
-        LoginReq login = LoginReq.builder()
-                .email("dudrhkd4179@naver.com")
-                .password("12345")
-                .build();
-        // when
-        Assertions.assertThrows(InvalidSignInInformation.class, () -> authService.signin(login));
-
-    }
 }

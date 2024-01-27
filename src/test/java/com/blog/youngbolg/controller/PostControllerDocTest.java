@@ -1,8 +1,8 @@
 package com.blog.youngbolg.controller;
 
 import com.blog.youngbolg.domain.Post;
-import com.blog.youngbolg.repository.PostRepository;
-import com.blog.youngbolg.request.PostCreateReq;
+import com.blog.youngbolg.repository.post.PostRepository;
+import com.blog.youngbolg.request.post.PostCreateReq;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -67,6 +68,7 @@ public class PostControllerDocTest {
     }
 
     @Test
+    @WithMockUser(username = "dudrhkd4179@naver.com", roles = {"ADMIN"})
     @DisplayName("글 등록")
     void registration() throws Exception {
 

@@ -1,8 +1,10 @@
-package com.blog.youngbolg.request;
+package com.blog.youngbolg.request.post;
 
-import com.blog.youngbolg.exception.InvalidRequest;
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -19,12 +21,5 @@ public class PostCreateReq {
     public PostCreateReq(String title, String content) {
         this.title = title;
         this.content = content;
-    }
-
-    // 던진다.
-    public void validate() {
-        if(title.contains("바보")) {
-            throw new InvalidRequest("title", "제목에 바보를 포함할 수 없습니다.");
-        }
     }
 }

@@ -1,7 +1,7 @@
-package com.blog.youngbolg.repository;
+package com.blog.youngbolg.repository.post;
 
 import com.blog.youngbolg.domain.Post;
-import com.blog.youngbolg.request.PostSearchReq;
+import com.blog.youngbolg.request.post.PostSearchReq;
 
 import java.util.List;
 

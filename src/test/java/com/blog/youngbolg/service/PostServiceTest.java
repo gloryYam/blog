@@ -2,11 +2,12 @@ package com.blog.youngbolg.service;
 
 import com.blog.youngbolg.domain.Post;
 import com.blog.youngbolg.exception.PostNotFound;
-import com.blog.youngbolg.repository.PostRepository;
-import com.blog.youngbolg.request.PostCreateReq;
-import com.blog.youngbolg.request.PostEditReq;
-import com.blog.youngbolg.request.PostSearchReq;
+import com.blog.youngbolg.repository.post.PostRepository;
+import com.blog.youngbolg.request.post.PostCreateReq;
+import com.blog.youngbolg.request.post.PostEditReq;
+import com.blog.youngbolg.request.post.PostSearchReq;
 import com.blog.youngbolg.response.PostResponse;
+import com.blog.youngbolg.service.post.PostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,8 +1,9 @@
 package com.blog.youngbolg.controller;
 
 import com.blog.youngbolg.domain.Post;
-import com.blog.youngbolg.repository.PostRepository;
-import com.blog.youngbolg.request.PostCreateReq;
+import com.blog.youngbolg.repository.UserRepository;
+import com.blog.youngbolg.repository.post.PostRepository;
+import com.blog.youngbolg.request.post.PostCreateReq;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -30,17 +32,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class PostControllerTest {
 
     @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
     private MockMvc mockMvc;
 
     @Autowired
     private PostRepository postRepository;
 
     @Autowired
-    ObjectMapper objectMapper;
+    private UserRepository userRepository;
 
     @BeforeEach
     void clear() {
         postRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
 
@@ -68,6 +74,7 @@ class PostControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "dudrhkd4179@naver.com", roles = {"ADMIN"})
     @DisplayName("/posts 요청시 db에 값이 저장이 된다.")
     void test2() throws Exception {
 
@@ -76,7 +83,6 @@ class PostControllerTest {
                 .content("내용입니다.")
                 .build();
 
-        ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(request);
         //when
         mockMvc.perform(post("/posts")
@@ -90,8 +96,8 @@ class PostControllerTest {
         assertEquals(1L, postRepository.count());
 
         Post post = postRepository.findAll().get(0);
-        assertEquals(post.getTitle(), "제목입니다.");
-        assertEquals(post.getContent(), "내용입니다.");
+        assertEquals(post.getTitle(), "제목입니다.", post.getTitle());
+        assertEquals(post.getContent(), "내용입니다.", post.getContent());
     }
 
     @Test
@@ -115,6 +121,7 @@ class PostControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "dudrhkd4179@naver.com", roles = {"ADMIN"})
     @DisplayName("글 여러 개 조회")
     void test4() throws Exception {
         // given
@@ -138,6 +145,7 @@ class PostControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "dudrhkd4179@naver.com", roles = {"ADMIN"})
     @DisplayName("페이지를 0으로 요청하면 첫 페이지를 가져온다.")
     void test5() throws Exception {
         // given
@@ -184,7 +192,7 @@ class PostControllerTest {
     @DisplayName("존재하지 않은 게시글 조회")
     void test7() throws Exception {
 
-        mockMvc.perform(delete("/posts/{postId}", 1L)
+        mockMvc.perform(get("/posts/{postId}", 1L)
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andDo(print());
@@ -204,30 +212,6 @@ class PostControllerTest {
                         .content(objectMapper.writeValueAsString(postEdit)))
                 .andExpect(status().isNotFound())
                 .andDo(print());
-    }
-
-
-    @Test
-    @DisplayName("게시글 작성시 제목에 '바보'는 포함될 수 없다. ")
-    void test9() throws Exception {
-
-        PostCreateReq request = PostCreateReq.builder()
-                .title("나는 바보입니다.")
-                .content("안녕하세요")
-                .build();
-
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(request);
-        //when
-        mockMvc.perform(post("/posts")
-                        .contentType(APPLICATION_JSON)
-                        .content(json)
-                ) // application/json
-                .andExpect(status().isBadRequest())
-                .andDo(print()); // 성공했을 때 http 요청에 대한 summary 를 남겨준게 된다
-
-        // then
     }
 
 }

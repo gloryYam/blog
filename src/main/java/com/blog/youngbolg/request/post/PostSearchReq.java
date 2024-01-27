@@ -1,4 +1,4 @@
-package com.blog.youngbolg.request;
+package com.blog.youngbolg.request.post;
 
 import lombok.Builder;
 import lombok.Getter;

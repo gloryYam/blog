@@ -1,4 +1,4 @@
-package com.blog.youngbolg.repository;
+package com.blog.youngbolg.repository.post;
 
 import com.blog.youngbolg.domain.Post;
 import org.springframework.data.jpa.repository.JpaRepository;

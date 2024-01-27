@@ -1,5 +1,8 @@
 ### 테스트 요청
-
-GET http://localhost:8080/glory
+POST http://localhost:8080/posts
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzA1NjY3OTU5fQ.UXHA8TAynNRdJA9P6XCWHi4UYK3f25FKnuFvteW4vIo
+
+{
+  "title": "제목입니다.",
+  "content": "내용입니다."
+}

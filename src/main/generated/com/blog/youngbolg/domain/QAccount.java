@@ -7,18 +7,19 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
-import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QUser is a Querydsl query type for User
+ * QAccount is a Querydsl query type for Account
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QUser extends EntityPathBase<User> {
+public class QAccount extends EntityPathBase<Account> {
 
-    private static final long serialVersionUID = 154842568L;
+    private static final long serialVersionUID = -910023920L;
 
-    public static final QUser user = new QUser("user");
+    public static final QAccount account = new QAccount("account");
+
+    public final EnumPath<AccountRole> accountRole = createEnum("accountRole", AccountRole.class);
 
     public final DateTimePath<java.time.LocalDateTime> createdAt = createDateTime("createdAt", java.time.LocalDateTime.class);
 
@@ -30,18 +31,16 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath password = createString("password");
 
-    public final ListPath<Session, QSession> sessions = this.<Session, QSession>createList("sessions", Session.class, QSession.class, PathInits.DIRECT2);
-
-    public QUser(String variable) {
-        super(User.class, forVariable(variable));
+    public QAccount(String variable) {
+        super(Account.class, forVariable(variable));
     }
 
-    public QUser(Path<? extends User> path) {
+    public QAccount(Path<? extends Account> path) {
         super(path.getType(), path.getMetadata());
     }
 
-    public QUser(PathMetadata metadata) {
-        super(User.class, metadata);
+    public QAccount(PathMetadata metadata) {
+        super(Account.class, metadata);
     }
 
 }

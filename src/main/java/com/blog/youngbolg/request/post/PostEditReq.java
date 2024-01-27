@@ -1,4 +1,4 @@
-package com.blog.youngbolg.request;
+package com.blog.youngbolg.request.post;
 
 import com.blog.youngbolg.domain.PostEditor;
 import jakarta.validation.constraints.NotBlank;

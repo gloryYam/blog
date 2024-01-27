@@ -7,13 +7,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User {
+public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,16 +24,17 @@ public class User {
 
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    private AccountRole accountRole;
+
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Session> sessions = new ArrayList<>();
-
     @Builder
-    public User(Long id, String name, String email, String password, LocalDateTime createdAt, List<Session> sessions) {
+    public Account(Long id, String name, String email, String password, AccountRole accountRole) {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.accountRole = accountRole;
         this.createdAt = LocalDateTime.now();
     }
 
@@ -43,14 +42,5 @@ public class User {
         this.password = password;
     }
 
-    public Session addSession() {
-        Session session = Session.builder()
-                .user(this)
-                .build();
-
-        sessions.add(session);
-
-        return session;
-    }
 
 }
