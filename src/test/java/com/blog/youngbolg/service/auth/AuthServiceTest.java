@@ -32,18 +32,21 @@ class AuthServiceTest {
         // given
         Account signupReq = Account.builder()
                 .name("김영광")
+                .nickName("글로리")
                 .email("dudrhkd4179@naver.com")
                 .password("1234")
                 .build();
 
         // when
-        authService.signup(signupReq);
+        authService.signup(signupReq, "1234");
 
         // then
         assertEquals(1, userRepository.count());
 
         Account account = userRepository.findAll().iterator().next();
+
         assertEquals("dudrhkd4179@naver.com", account.getEmail());
+        assertEquals("글로리", account.getNickName());
         assertNotNull(account.getPassword());
         assertNotEquals("1234", account.getPassword());
         assertEquals("김영광", account.getName());
@@ -56,6 +59,7 @@ class AuthServiceTest {
         // given
         Account account1 = Account.builder()
                 .name("김영광")
+                .nickName("글로리")
                 .email("dudrhkd4179@naver.com")
                 .password("1234")
                 .build();
@@ -64,15 +68,34 @@ class AuthServiceTest {
 
         Account account2 = Account.builder()
                 .name("바나나")
+                .nickName("사과")
                 .email("dudrhkd4179@naver.com")
                 .password("1234")
                 .build();
 
         // when
-        Assertions.assertThrows(AlreadyExistsEmailException.class, () -> authService.signup(account2));
+        Assertions.assertThrows(AlreadyExistsEmailException.class,
+                () -> authService.signup(account2, "1234"));
 
         // then
         assertEquals(1, userRepository.count());
+    }
+
+    @Test
+    @DisplayName("비밀번호 확인 검증")
+    void passwordMatch() {
+
+        String password2 = "1234";
+        Account account = Account.builder()
+                .name("김영광")
+                .email("dudrhkd4179@naver.com")
+                .password("1234")
+                .nickName("글로리")
+                .build();
+
+        authService.signup(account, password2);
+
+        assertEquals("1234", password2);
     }
 
 }

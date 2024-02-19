@@ -12,9 +12,9 @@ spring:
   data:
     web:
       pageable:
+        max-page-size: 2000
+        default-page-size: 20
         one-indexed-parameters: true
-        #1부터 시작을 하겠다 기본 값이 false -> 0부터 시작하겠다.
-        default-page-size: 5
 
   jpa:
     properties:

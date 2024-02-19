@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref} from "vue";
+import { ref, watch } from "vue";
 
 import axios from "axios";
 import router from "@/router";
@@ -10,13 +10,24 @@ const password1 = ref("")
 const password2 = ref("")
 const nickName = ref("")
 
-const signIn = function () {
+const isPasswordMatch = ref(true)
+
+watch([password1, password2], () => {
+  isPasswordMatch.value = password1.value === password2.value;
+})
+
+const signup = function () {
+  if(!isPasswordMatch.value) {
+    alert("비밀번호가 일치하지 않습니다.");
+    return;
+  }
+
   axios
-      .post("/api/auth/signup", {
+      .post("/auth/signup", {
         name: name.value,
         email: email.value,
-        password1: password.value,
-        password2: rePassword.value,
+        password1: password1.value,
+        password2: password2.value,
         nickName: nickName.value
       })
       .then(() => {
@@ -29,13 +40,14 @@ const signIn = function () {
   <div>
     <el-input class="input-field" v-model="name" placeholder="이름을 입력해주세요."/>
     <el-input class="input-field" v-model="email" placeholder="이메일을 입력해주세요."/>
-    <el-input class="input-field" v-model="password1" placeholder="비밀번호를 입력해주세요."/>
-    <el-input class="input-field" v-model="password2" placeholder="비밀번호를 입력해주세요."/>
-    <el-input class="input-field" v-model="nickName" placeholder="비밀번호를 입력해주세요."/>
+    <el-input class="input-field" type="password" v-model="password1" placeholder="비밀번호를 입력해주세요."/>
+    <el-input class="input-field" type="password" v-model="password2" placeholder="비밀번호 확인을 해주세요."/>
+    <p v-if="!isPasswordMatch">비밀번호가 일치하지 않습니다.</p>
+    <el-input class="input-field" v-model="nickName" placeholder="닉네임을 입력해주세요."/>
   </div>
 
-  <div class="login-container">
-    <el-button type="primary" @click="login()">회원가입</el-button>
+  <div class="signup-container">
+    <el-button type="primary" @click="signup()">회원가입</el-button>
   </div>
 </template>
 
@@ -45,7 +57,7 @@ const signIn = function () {
   padding-right: 50%;
   text-align: center;
 }
-.login-container {
+.signup-container {
   padding-left: 45%;
 }
 </style>

@@ -39,7 +39,8 @@ class AuthControllerTest {
     void Signup() throws Exception {
         // given
         Account account = Account.builder()
-                .name("글로리")
+                .name("김영광")
+                .nickName("글로리")
                 .email("dudrhkd4179@naver.com")
                 .password("1234")
                 .build();

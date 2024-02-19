@@ -25,6 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.session.security.web.authentication.SpringSessionRememberMeServices;
 
 @EnableWebSecurity
@@ -52,6 +53,12 @@ public class SecurityConfig {
                 .exceptionHandling(e -> e
                         .accessDeniedHandler(new Http403Handler(objectMapper))
                         .authenticationEntryPoint(new Http401Handler(objectMapper))
+                )
+                .logout(logout -> logout
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout"))
+                        .logoutSuccessUrl("/")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("remember-me")
                 )
                 .addFilterBefore(usernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .build();

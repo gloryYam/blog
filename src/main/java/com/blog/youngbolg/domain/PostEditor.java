@@ -1,4 +1,4 @@
-package com.hodolog.api.domain;
+package com.blog.youngbolg.domain;
 
 import lombok.Builder;
 import lombok.Getter;

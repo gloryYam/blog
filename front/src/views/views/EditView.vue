@@ -19,7 +19,7 @@ const props = defineProps({
   },
 });
 
-axios.get(`/api/posts/${props.postId}`).then((response) => {
+axios.get(`/auth/posts/${props.postId}`).then((response) => {
   post.value = response.data;
 });
 

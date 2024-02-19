@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -21,6 +22,8 @@ public class QAccount extends EntityPathBase<Account> {
 
     public final EnumPath<AccountRole> accountRole = createEnum("accountRole", AccountRole.class);
 
+    public final ListPath<Comment, QComment> comments = this.<Comment, QComment>createList("comments", Comment.class, QComment.class, PathInits.DIRECT2);
+
     public final DateTimePath<java.time.LocalDateTime> createdAt = createDateTime("createdAt", java.time.LocalDateTime.class);
 
     public final StringPath email = createString("email");
@@ -29,7 +32,11 @@ public class QAccount extends EntityPathBase<Account> {
 
     public final StringPath name = createString("name");
 
+    public final StringPath nickName = createString("nickName");
+
     public final StringPath password = createString("password");
+
+    public final ListPath<Post, QPost> posts = this.<Post, QPost>createList("posts", Post.class, QPost.class, PathInits.DIRECT2);
 
     public QAccount(String variable) {
         super(Account.class, forVariable(variable));

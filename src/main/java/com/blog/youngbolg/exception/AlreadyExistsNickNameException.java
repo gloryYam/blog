@@ -1,10 +1,10 @@
 package com.blog.youngbolg.exception;
 
-public class AlreadyExistsEmailException extends YoungBlogException{
+public class AlreadyExistsNickNameException extends YoungBlogException{
 
-    private static final String MESSAGE = "이미 가입된 이메일입니다.";
+    private static final String MESSAGE = "이미 존재하는 닉네임입니다.";
 
-    public AlreadyExistsEmailException() {
+    public AlreadyExistsNickNameException() {
         super(MESSAGE);
     }
 

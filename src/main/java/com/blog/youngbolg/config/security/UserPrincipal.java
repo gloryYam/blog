@@ -5,17 +5,20 @@ import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Collection;
 
 @Getter
-public class UserPrincipal extends User {
+public class UserPrincipal extends User implements Serializable {
 
-    private final Long id;
+    @Serial
+    private static final long serialVersionUID = 166483891527373909L;
+    private final Long userId;
 
     public UserPrincipal(Account account, Collection<? extends GrantedAuthority> authorities) {
         super(account.getEmail(), account.getPassword(), authorities);
 
-        this.id = account.getId();
+        this.userId = account.getId();
     }
-
 }

@@ -11,17 +11,18 @@ public class AuthFacade {
 
     private final AuthService authService;
 
-    public Long register(SignupReq signupReq) {
+    public Long regist(SignupReq signupReq) {
         Account account = toEntity(signupReq);
-        return authService.signup(account);
+        return authService.signup(account, signupReq.getPassword2());
     }
 
 
-    public Account toEntity(SignupReq signupReq) {
+    private Account toEntity(SignupReq signupReq) {
         return Account.builder()
                 .email(signupReq.getEmail())
+                .nickName(signupReq.getNickName())
                 .name(signupReq.getName())
-                .password(signupReq.getPassword())
+                .password(signupReq.getPassword1())
                 .build();
     }
 }

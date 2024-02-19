@@ -1,6 +1,5 @@
 package com.blog.youngbolg.request.post;
 
-import com.blog.youngbolg.domain.PostEditor;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,11 +19,5 @@ public class PostEditReq {
     public PostEditReq(String title, String content) {
         this.title = title;
         this.content = content;
-    }
-
-    public PostEditor.PostEditorBuilder toEditor() {
-        return PostEditor.builder()
-                .title(title)
-                .content(content);
     }
 }

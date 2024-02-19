@@ -1,8 +1,38 @@
-### 테스트 요청
+### 게시글 생성
 POST http://localhost:8080/posts
 Content-Type: application/json
 
 {
-  "title": "제목입니다.",
+  "title": "",
   "content": "내용입니다."
 }
+
+### 게시글 수정
+PATCH http://localhost:8080/posts/1
+Content-Type: application/json
+
+{
+  "title": "아라리요",
+  "content": "내용입니까?"
+}
+
+
+### 게시글 삭제
+DELETE http://localhost:8080/posts/1
+Content-Type: application/json
+
+
+
+### 페이징
+GET http://localhost:8080/posts
+Content-Type: application/x-www-form-urlencoded
+
+http://localhost:8080/posts?page=1&size=10
+
+### 검색 요청
+GET http://localhost:8080/posts
+Content-Type: application/x-www-form-urlencoded
+
+http://localhost:8080/posts?post=아라
+
+

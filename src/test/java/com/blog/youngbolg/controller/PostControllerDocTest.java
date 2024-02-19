@@ -1,9 +1,12 @@
 package com.blog.youngbolg.controller;
 
+import com.blog.youngbolg.config.YoungMockUser;
 import com.blog.youngbolg.domain.Post;
+import com.blog.youngbolg.repository.UserRepository;
 import com.blog.youngbolg.repository.post.PostRepository;
 import com.blog.youngbolg.request.post.PostCreateReq;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,7 +15,6 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.restdocs.RestDocumentationExtension;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -41,23 +43,33 @@ public class PostControllerDocTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @AfterEach
+    void clear() {
+        postRepository.deleteAll();
+        userRepository.deleteAll();
+    }
+
     @Test
     @DisplayName("글 단 건 조회 테스트")
-    void test() throws Exception {
-
+    void test1() throws Exception {
+        // given
         Post post = Post.builder()
                 .title("제목")
                 .content("내용")
                 .build();
-
         postRepository.save(post);
 
-        this.mockMvc.perform(get("/posts/{postId}", 1L)
+        // expected
+        mockMvc.perform(get("/posts/{postId}", 1L)
                         .accept(APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andDo(document("post-inquiry", pathParameters(
-                        parameterWithName("postId").description("게시글 ID")
+                .andDo(document("post-inquiry",
+                        pathParameters(
+                                parameterWithName("postId").description("게시글 ID")
                         ),
                         responseFields(
                                 fieldWithPath("id").description("게시글 ID"),
@@ -68,7 +80,7 @@ public class PostControllerDocTest {
     }
 
     @Test
-    @WithMockUser(username = "dudrhkd4179@naver.com", roles = {"ADMIN"})
+    @YoungMockUser
     @DisplayName("글 등록")
     void registration() throws Exception {
 

@@ -1,12 +1,12 @@
 package com.blog.youngbolg.repository.post;
 
-import com.blog.youngbolg.domain.Post;
 import com.blog.youngbolg.request.post.PostSearchReq;
-
-import java.util.List;
+import com.blog.youngbolg.response.PostResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface PostRepositoryCustom {
 
-    List<Post> getList(PostSearchReq postSearchReq);
+    Page<PostResponse> searchPost(PostSearchReq postSearchReq, Pageable pageable);
 
 }

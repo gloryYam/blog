@@ -1,33 +1,36 @@
 package com.blog.youngbolg.controller;
 
 import com.blog.youngbolg.config.YoungMockUser;
+import com.blog.youngbolg.config.security.UserPrincipal;
 import com.blog.youngbolg.domain.Account;
+import com.blog.youngbolg.domain.Comment;
 import com.blog.youngbolg.domain.Post;
 import com.blog.youngbolg.repository.UserRepository;
+import com.blog.youngbolg.repository.comment.CommentRepository;
 import com.blog.youngbolg.repository.post.PostRepository;
-import com.blog.youngbolg.request.post.PostCreateReq;
+import com.blog.youngbolg.request.Comment.CommentCreateReq;
+import com.blog.youngbolg.request.Comment.CommentDeleteReq;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
+@Slf4j
 @SpringBootTest
 @AutoConfigureMockMvc
 class CommentControllerTest {
@@ -44,8 +47,15 @@ class CommentControllerTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private CommentRepository commentRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @AfterEach
     void clear() {
+        commentRepository.deleteAll();
         postRepository.deleteAll();
         userRepository.deleteAll();
     }
@@ -53,63 +63,18 @@ class CommentControllerTest {
 
     @Test
     @YoungMockUser
-    @DisplayName("/posts 요청시 title 값은 필수다")
+    @DisplayName("댓글 작성")
     void test1() throws Exception {
-        PostCreateReq request = PostCreateReq.builder()
-                .content("내용입니다.")
-                .build();
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(request);
-
-        // expected
-        mockMvc.perform(post("/posts")
-                        .contentType(APPLICATION_JSON)
-                        .content(json)
-                ) // application/json
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value("400"))
-                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
-                .andExpect(jsonPath("$.validations[0].fieldName").value("title"))
-                .andExpect(jsonPath("$.validations[0].errorMessage").value("타이틀을 입력해주세요."))
-                .andDo(print()); // 성공했을 때 http 요청에 대한 summary 를 남겨준게 된다
-    }
-
-    @Test
-    @YoungMockUser
-    @DisplayName("글 작성")
-    void test2() throws Exception {
-
-        PostCreateReq request = PostCreateReq.builder()
-                .title("제목입니다.")
-                .content("내용입니다.")
-                .build();
-
-        String json = objectMapper.writeValueAsString(request);
-        //when
-        mockMvc.perform(post("/posts")
-                        .contentType(APPLICATION_JSON)
-                        .content(json))
-                .andExpect(status().isOk())
-                .andDo(print());
-
-        // then
-        assertEquals(1L, postRepository.count());
-
-        Post post = postRepository.findAll().get(0);
-        assertEquals("제목입니다.", post.getTitle());
-        assertEquals("내용입니다.", post.getContent());
-    }
-
-    @Test
-    @DisplayName("글 1개 조회")
-    void test3() throws Exception {
+        // given
         Account account = Account.builder()
                 .name("김영광")
+                .nickName("글로리")
                 .email("dudrhkd4179@naver.com")
                 .password("1234")
                 .build();
         userRepository.save(account);
+
         // given
         Post post = Post.builder()
                 .title("엔드")
@@ -117,113 +82,78 @@ class CommentControllerTest {
                 .account(account)
                 .build();
         postRepository.save(post);
+        // when
 
-        // expected
-        mockMvc.perform(get("/posts/{postId}", post.getId())
-                        .contentType(APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(post.getId()))
-                .andExpect(jsonPath("$.title").value("엔드"))
-                .andExpect(jsonPath("$.content").value("백엔드"))
-                .andDo(print());
-    }
-
-    @Test
-    @DisplayName("글 여러 개 조회")
-    void test4() throws Exception {
-        Account account = Account.builder()
-                .name("김영광")
-                .email("dudrhkd4179@naver.com")
+        CommentCreateReq request = CommentCreateReq.builder()
                 .password("1234")
+                .content("댓글입니다.ㅇㅇㅇㅇㅇㅇ")
                 .build();
-        userRepository.save(account);
 
-        // given
-        List<Post> requestPosts = IntStream.range(0, 20)
-                .mapToObj(i -> Post.builder()
-                        .title("블로그 제목 " + i)
-                        .content("백엔드 " + i)
-                        .account(account)
-                        .build())
-                .collect(Collectors.toList());
+        String json = objectMapper.writeValueAsString(request);
 
-        postRepository.saveAll(requestPosts);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+        log.info("principalId={}", principal.getUserId());
 
-        // expected
-        mockMvc.perform(get("/posts?page=1&size=10")
-                        .contentType(APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()", is(11)))
-                .andExpect(jsonPath("$.content[0].title").value("블로그 제목 19"))
-                .andExpect(jsonPath("$.content[0].content").value("백엔드 19"))
-                .andDo(print());
-    }
+        mockMvc.perform(post("/posts/{postId}/comments", post.getId())
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(json)
+                )
+                .andDo(print())
+                .andExpect(status().isOk());
 
-    @Test
-    @DisplayName("페이지를 0으로 요청하면 첫 페이지를 가져온다.")
-    void test5() throws Exception {
-        Account account = Account.builder()
-                .name("김영광")
-                .email("dudrhkd4179@naver.com")
-                .password("1234")
-                .build();
-        userRepository.save(account);
+        assertEquals(1L, commentRepository.count());
 
-        // given
-        List<Post> requestPosts = IntStream.range(0, 20)
-                .mapToObj(i -> Post.builder()
-                        .title("블로그 제목 " + i)
-                        .content("백엔드 " + i)
-                        .account(account)
-                        .build())
-                .collect(Collectors.toList());
+        Comment comment = commentRepository.findAll().get(0);
 
-        postRepository.saveAll(requestPosts);
-
-        // expected
-        mockMvc.perform(get("/posts?page=1&size=11")
-                        .contentType(APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()", is(11)))
-                .andExpect(jsonPath("$.content[0].title").value("블로그 제목 19"))
-                .andExpect(jsonPath("$.content[0].content").value("백엔드 19"))
-                .andDo(print());
+        assertEquals("글로리", comment.getNickName());
+        assertNotEquals("1234", comment.getPassword());
+        assertTrue(passwordEncoder.matches("1234", comment.getPassword()));
+        assertEquals("댓글입니다.ㅇㅇㅇㅇㅇㅇ", comment.getContent());
     }
 
     @Test
     @YoungMockUser
-    @DisplayName("게시글 삭제")
-    void test6() throws Exception {
-        Account account = userRepository.findAll().get(0);
+    @DisplayName("댓글 삭제")
+    void delete() throws Exception {
+        //given
+        Account account = Account.builder()
+                .name("김영광")
+                .nickName("글로리")
+                .email("dudrhkd4179@naver.com")
+                .password("1234")
+                .build();
 
-        // given
+        userRepository.save(account);
+
         Post post = Post.builder()
-                .title("glory")
-                .content("안녕하세요")
+                .title("백엔드")
+                .content("엔드엔드엔드엔드")
                 .account(account)
                 .build();
 
         postRepository.save(post);
 
-        // when
-        mockMvc.perform(delete("/posts/{postId}", post.getId())
-                        .contentType(APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andDo(print());
-        // then
+        String encryptedPassword = passwordEncoder.encode("1234");
 
+        Comment comment = Comment.builder()
+                .content("아아아아아아ㅏㅏ아ㅏ아아아아ㅏㅇ")
+                .nickName(account.getNickName())
+                .build();
+        comment.encodePassword(encryptedPassword);
+        commentRepository.save(comment);
+
+        CommentDeleteReq request = new CommentDeleteReq("1234");
+        String json = objectMapper.writeValueAsString(request);
+        //expected
+
+        mockMvc.perform(post("/comments/{commentId}/delete", comment.getId())
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(json)
+                )
+                .andDo(print())
+                .andExpect(status().isOk());
     }
-
-    @Test
-    @DisplayName("존재하지 않은 게시글 조회")
-    void test7() throws Exception {
-
-        mockMvc.perform(get("/posts/{postId}", 1L)
-                        .contentType(APPLICATION_JSON))
-                .andExpect(status().isNotFound())
-                .andDo(print());
-    }
-
 }
 
 
