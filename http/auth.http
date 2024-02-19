@@ -1,0 +1,39 @@
+### 회원가입
+
+POST http://localhost:8080/auth/signup
+Content-Type: application/json
+
+{
+  "name": "김영광",
+  "email": "dudrhkd4179@naver.com",
+  "password1": "1234",
+  "password2": "1234",
+  "nickName": "글로리"
+}
+
+
+### 로그인
+
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "email": "dudrhkd4179@naver.com",
+  "password": "1234"
+}
+
+### 로그아웃
+POST http://localhost:8080/auth/logout
+
+
+
+### 사용자 페이지
+GET http://localhost:8080/account
+
+
+### 관리자 페이지
+GET http://localhost:8080/admin
+
+
+### 메인 페이지
+GET http://localhost:8080

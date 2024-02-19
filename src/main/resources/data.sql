@@ -1,0 +1,1 @@
+INSERT INTO `account` (name, email, password, created_at) VALUES ('글로리', 'dudrhkd4179@naver.com', '1234', '2023-12-12 20:37:00')

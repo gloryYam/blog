@@ -1,7 +1,4 @@
 spring:
-  profiles:
-    active: dev
-
   datasource:
     url: jdbc:mysql://glorylogdb.cxoss2ksihqk.ap-northeast-2.rds.amazonaws.com:3306/glorylogdb
     username: root
@@ -15,9 +12,9 @@ spring:
   data:
     web:
       pageable:
+        max-page-size: 2000
+        default-page-size: 20
         one-indexed-parameters: true
-        #1부터 시작을 하겠다 기본 값이 false -> 0부터 시작하겠다.
-        default-page-size: 5
 
   jpa:
     properties:
@@ -26,9 +23,13 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
         # show_sql: true
         format_sql: true
-
+    defer-datasource-initialization: ture
 
 logging.level:
   org.hibernate.SQL: debug
+
+glory:
+  jwt-Key: "A7CHmMZ/yELDqzbAGac4105ftkVsVHIxF2ad4oywpiQ="
+
 
 

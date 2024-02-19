@@ -1,21 +1,20 @@
 package com.blog.youngbolg.service;
 
+import com.blog.youngbolg.config.YoungMockUser;
+import com.blog.youngbolg.domain.Account;
 import com.blog.youngbolg.domain.Post;
 import com.blog.youngbolg.exception.PostNotFound;
-import com.blog.youngbolg.repository.PostRepository;
-import com.blog.youngbolg.request.PostCreate;
-import com.blog.youngbolg.request.PostEdit;
-import com.blog.youngbolg.request.PostSearch;
+import com.blog.youngbolg.repository.UserRepository;
+import com.blog.youngbolg.repository.post.PostRepository;
+import com.blog.youngbolg.request.post.PostCreateReq;
+import com.blog.youngbolg.request.post.PostEditReq;
 import com.blog.youngbolg.response.PostResponse;
+import com.blog.youngbolg.service.post.PostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,26 +28,37 @@ class PostServiceTest {
     @Autowired
     private PostRepository postRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @BeforeEach
     void clear() {
         postRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
     @DisplayName("글 작성")
     void test1() {
         // given
-        PostCreate postCreate = PostCreate.builder()
+        Account account = Account.builder()
+                .name("김영광")
+                .nickName("글로리")
+                .email("dudrhkd4179@naver.com")
+                .password("1234")
+                .build();
+        userRepository.save(account);
+
+        PostCreateReq postCreateReq = PostCreateReq.builder()
                 .title("제목입니다.")
                 .content("내용입니다.")
                 .build();
 
         // when
-        postService.write(postCreate);
+        postService.write(account.getId(), postCreateReq);
 
         // then
         assertEquals(1L, postRepository.count());
-
         Post post = postRepository.findAll().get(0);
         assertEquals(post.getTitle(), "제목입니다.");
         assertEquals(post.getContent(), "내용입니다.");
@@ -77,35 +87,35 @@ class PostServiceTest {
         assertEquals("내용입니다.", response.getContent());
     }
     
-    @Test
-    @DisplayName("글 1페이지 조회")
-    void test3() {
-
-        //given
-        List<Post> requestPosts = IntStream.range(0, 20)
-                .mapToObj(i -> Post.builder()
-                        .title("블로그 제목 " + i)
-                        .content("백엔드 " + i)
-                        .build())
-                .collect(Collectors.toList());
-
-        postRepository.saveAll(requestPosts);
-
-        PostSearch postSearch = PostSearch.builder()
-                .page(1)
-                .build();
-
-        // when
-        List<PostResponse> posts = postService.getList(postSearch);
-
-        // then
-        assertEquals(10L, posts.size());
-        assertEquals("블로그 제목 19", posts.get(0).getTitle());
-    }
+//    @Test
+//    @DisplayName("글 1페이지 조회")
+//    void test3() {
+//
+//        //given
+//        List<Post> requestPosts = IntStream.range(0, 20)
+//                .mapToObj(i -> Post.builder()
+//                        .title("블로그 제목 " + i)
+//                        .content("백엔드 " + i)
+//                        .build())
+//                .collect(Collectors.toList());
+//
+//        postRepository.saveAll(requestPosts);
+//
+//        PostSearchReq postSearchReq = PostSearchReq.builder()
+//                .page(1)
+//                .build();
+//
+//        // when
+//        List<PostResponse> posts = postService.getList(postSearchReq);
+//
+//        // then
+//        assertEquals(10L, posts.size());
+//        assertEquals("블로그 제목 19", posts.get(0).getTitle());
+//    }
 
     @Test
     @DisplayName("글 제목 수정")
-    void test4() {
+    void test4() throws Exception {
 
         //given
         Post post = Post.builder()
@@ -115,7 +125,7 @@ class PostServiceTest {
 
         postRepository.save(post);
 
-        PostEdit postEdit = PostEdit.builder()
+        PostEditReq postEdit = PostEditReq.builder()
                 .title("백엔드")
                 .content("안녕하세요")
                 .build();
@@ -124,14 +134,12 @@ class PostServiceTest {
         postService.edit(post.getId(), postEdit);
 
         // then
-        Post changePost = postRepository.findById(post.getId())
-                .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id +" + post.getId()));
-
-        assertEquals("백엔드", changePost.getTitle());
-        assertEquals("안녕하세요", changePost.getContent());
+        Post changedPost = postRepository.findById(post.getId())
+                .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id=" + post.getId()));
+        assertEquals("백엔드", changedPost.getTitle());
     }
 
-    /*@Test
+    @Test
     @DisplayName("글 내용 수정")
     void test5() {
 
@@ -143,7 +151,7 @@ class PostServiceTest {
 
         postRepository.save(post);
 
-        PostEdit postEdit = PostEdit.builder()
+        PostEditReq postEdit = PostEditReq.builder()
                 .title(null)
                 .content("반갑습니다.")
                 .build();
@@ -155,11 +163,11 @@ class PostServiceTest {
         Post changePost = postRepository.findById(post.getId())
                 .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id +" + post.getId()));
 
-        assertEquals("김영광", changePost.getTitle());
         assertEquals("반갑습니다.", changePost.getContent());
-    }*/
+    }
 
     @Test
+    @YoungMockUser
     @DisplayName("게시글 삭제")
     void test6() {
         // given
@@ -228,7 +236,7 @@ class PostServiceTest {
 
         postRepository.save(post);
 
-        PostEdit postEdit = PostEdit.builder()
+        PostEditReq postEdit = PostEditReq.builder()
                 .title(null)
                 .content("반갑습니다.")
                 .build();

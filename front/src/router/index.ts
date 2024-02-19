@@ -1,21 +1,23 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import {createRouter, createWebHistory} from 'vue-router'
 import HomeView from '@/views/views/HomeView.vue'
 import WriteView from '@/views/views/WriteView.vue'
 import ReadView from '@/views/views/ReadView.vue'
 import EditView from '@/views/views/EditView.vue'
+import LoginView from '@/views/views/LoginView.vue'
+import SignUpView from '@/views/views/SignUpView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component: HomeView
+      path: "/",
+      name: "home",
+      component: HomeView,
     },
     {
-      path: "/write",
+      path: "/auth/write",
       name: "write",
-      component: WriteView
+      component: WriteView,
     },
     {
       path: "/read/:postId",
@@ -29,7 +31,18 @@ const router = createRouter({
       component: EditView,
       props: true,
     },
-
+    {
+      path: "/auth/login",
+      name: "login",
+      component: LoginView,
+      props: true
+    },
+    {
+      path: "/auth/signup",
+      name: "signup",
+      component: SignUpView,
+      props: true
+    }
 
 //     {
 //       path: '/about',

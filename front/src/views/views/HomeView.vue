@@ -1,14 +1,13 @@
 <script setup lang="ts">
-
-import {ref} from "vue"
 import axios from "axios";
-import {useRouter} from "vue-router"
+import { ref } from "vue";
+import { useRouter } from "vue-router";
 
 const router = useRouter();
 
 const posts = ref([]);
 
-axios.get("/api/posts?page=1&size=5").then((response) => {
+axios.get("/post/posts?page=1&size=5").then((response) => {
   response.data.forEach((r: any) => {
     posts.value.push(r);
   });
@@ -20,9 +19,8 @@ axios.get("/api/posts?page=1&size=5").then((response) => {
     <li v-for="post in posts" :key="post.id">
       <div class="title">
         <router-link :to="{ name: 'read', params: { postId: post.id } }">{{
-            post.title
-          }}
-        </router-link>
+          post.title
+        }}</router-link>
       </div>
 
       <div class="content">
@@ -31,7 +29,7 @@ axios.get("/api/posts?page=1&size=5").then((response) => {
 
       <div class="sub d-flex">
         <div class="category">개발</div>
-        <div class="regDate">2024-01-01</div>
+        <div class="regDate">2023-12-01</div>
       </div>
     </li>
   </ul>
@@ -60,6 +58,7 @@ ul {
     .content {
       font-size: 0.85rem;
       margin-top: 8px;
+      line-height: 1.4;
       color: #7e7e7e;
     }
 
@@ -68,8 +67,8 @@ ul {
     }
 
     .sub {
-      margin-top: 7px;
-      font-size: 0.8rem;
+      margin-top: 8px;
+      font-size: 0.78rem;
 
       .regDate {
         margin-left: 10px;

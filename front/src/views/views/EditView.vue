@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import {useRouter} from "vue-router";
-import {defineProps, ref} from "vue";
+import { defineProps, ref } from "vue";
+
 import axios from "axios";
+import { useRouter } from "vue-router";
 
 const router = useRouter();
 
@@ -18,33 +19,29 @@ const props = defineProps({
   },
 });
 
-axios.get(`/api/posts/${props.postId}`).then((response) => {
+axios.get(`/auth/posts/${props.postId}`).then((response) => {
   post.value = response.data;
 });
 
 const edit = () => {
   axios.patch(`/api/posts/${props.postId}`, post.value).then(() => {
-    router.replace({ name: "home"});
+    router.replace({ name: "home" });
   });
-}
-
+};
 </script>
 
 <template>
-  <!--글 작성 api -->
   <div>
-    <el-input v-model="post.title"/>
+    <el-input v-model="post.title" />
   </div>
 
   <div class="mt-2">
-    <el-input v-model="post.content" type="textarea" rows="15"/>
+    <el-input v-model="post.content" type="textarea" rows="15" />
   </div>
 
-  <div class="mt-2">
+  <div class="mt-2 d-flex justify-content-end">
     <el-button type="warning" @click="edit()">수정완료</el-button>
   </div>
 </template>
 
-<style>
-
-</style>
+<style></style>

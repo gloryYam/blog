@@ -48,6 +48,20 @@ public class ExceptionController {
                 .body(body);
 
     }
+
+    @ResponseBody
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> exception(Exception e) {
+        log.error("예외발생", e);
+
+        ErrorResponse body = ErrorResponse.builder()
+                .code("404")
+                .message(e.getMessage())
+                .build();
+
+        return ResponseEntity.status(404)
+                .body(body);
+    }
 }
 
 
