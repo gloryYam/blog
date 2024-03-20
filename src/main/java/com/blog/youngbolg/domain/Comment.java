@@ -22,10 +22,10 @@ public class Comment extends BaseTimeEntity {
     private String nickName;
 
     @Column(nullable = false)
-    private String password;
+    private String content;
 
     @Column(nullable = false)
-    private String content;
+    private String password;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
@@ -33,25 +33,25 @@ public class Comment extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
-    private Account account;
+    private User user;
 
     @Builder
-    public Comment(String nickName, String content, Post post, Account account) {
+    public Comment(String nickName, String content, String password, Post post) {
         this.nickName = nickName;
         this.content = content;
+        this.password = password;
         this.post = post;
-        this.account = account;
     }
 
     public void encodePassword(String password) {
         this.password = password;
     }
 
-    public static Comment of(String nickName, String content, Post post, Account account) {
-        return new Comment(nickName, content, post, account);
+    public static Comment of(String nickName, String content, String password, Post post) {
+        return new Comment(nickName, content, password, post);
     }
 
     public String getEmail() {
-        return account.getEmail();
+        return user.getEmail();
     }
 }

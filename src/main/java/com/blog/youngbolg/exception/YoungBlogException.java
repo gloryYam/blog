@@ -6,6 +6,7 @@ import lombok.Getter;
 @Getter
 public abstract class YoungBlogException extends RuntimeException{
 
+
     private Validation validation;
 
     public YoungBlogException(String message) {

@@ -1,8 +1,8 @@
 package com.blog.youngbolg.config;
 
 import com.blog.youngbolg.config.security.UserPrincipal;
-import com.blog.youngbolg.domain.Account;
-import com.blog.youngbolg.domain.AccountRole;
+import com.blog.youngbolg.domain.User;
+import com.blog.youngbolg.domain.UserRole;
 import com.blog.youngbolg.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,22 +21,22 @@ public class YoungMockSecurityContext implements WithSecurityContextFactory<Youn
 
     @Override
     public SecurityContext createSecurityContext(YoungMockUser annotation) {
-        Account account = Account.builder()
+        User user = User.builder()
                 .email(annotation.email())
                 .nickName(annotation.nickName())
                 .name(annotation.name())
                 .password(annotation.password())
                 .build();
 
-        userRepository.save(account);
+        userRepository.save(user);
 
         List<SimpleGrantedAuthority> role = new ArrayList<>();
-        role.add(new SimpleGrantedAuthority(AccountRole.ADMIN.getValue()));
+        role.add(new SimpleGrantedAuthority(UserRole.ADMIN.getValue()));
 
-        UserPrincipal userPrincipal = new UserPrincipal(account, role);
+        UserPrincipal userPrincipal = new UserPrincipal(user, role);
 
         var authenticationToken = new UsernamePasswordAuthenticationToken(userPrincipal,
-                account.getPassword(),
+                user.getPassword(),
                 role);
 
         SecurityContext context = SecurityContextHolder.createEmptyContext();

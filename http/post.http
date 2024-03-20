@@ -3,12 +3,12 @@ POST http://localhost:8080/posts
 Content-Type: application/json
 
 {
-  "title": "",
+  "title": "제목입니다.",
   "content": "내용입니다."
 }
 
 ### 게시글 수정
-PATCH http://localhost:8080/posts/1
+PATCH http://localhost:8080/posts/2
 Content-Type: application/json
 
 {

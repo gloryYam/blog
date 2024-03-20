@@ -11,16 +11,14 @@ import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QAccount is a Querydsl query type for Account
+ * QUser is a Querydsl query type for User
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QAccount extends EntityPathBase<Account> {
+public class QUser extends EntityPathBase<User> {
 
-    private static final long serialVersionUID = -910023920L;
+    private static final long serialVersionUID = 154842568L;
 
-    public static final QAccount account = new QAccount("account");
-
-    public final EnumPath<AccountRole> accountRole = createEnum("accountRole", AccountRole.class);
+    public static final QUser user = new QUser("user");
 
     public final ListPath<Comment, QComment> comments = this.<Comment, QComment>createList("comments", Comment.class, QComment.class, PathInits.DIRECT2);
 
@@ -38,16 +36,18 @@ public class QAccount extends EntityPathBase<Account> {
 
     public final ListPath<Post, QPost> posts = this.<Post, QPost>createList("posts", Post.class, QPost.class, PathInits.DIRECT2);
 
-    public QAccount(String variable) {
-        super(Account.class, forVariable(variable));
+    public final EnumPath<UserRole> userRole = createEnum("userRole", UserRole.class);
+
+    public QUser(String variable) {
+        super(User.class, forVariable(variable));
     }
 
-    public QAccount(Path<? extends Account> path) {
+    public QUser(Path<? extends User> path) {
         super(path.getType(), path.getMetadata());
     }
 
-    public QAccount(PathMetadata metadata) {
-        super(Account.class, metadata);
+    public QUser(PathMetadata metadata) {
+        super(User.class, metadata);
     }
 
 }

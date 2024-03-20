@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Account {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,26 +29,26 @@ public class Account {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    private AccountRole accountRole;
+    private UserRole userRole;
 
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "account",
+    @OneToMany(mappedBy = "user",
             cascade = CascadeType.ALL)
     private List<Post> posts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "account",
+    @OneToMany(mappedBy = "user",
             cascade = CascadeType.ALL
     )
     private List<Comment> comments = new ArrayList<>();
 
     @Builder
-    public Account(String name, String nickName,String email, String password, AccountRole accountRole) {
+    public User(String name, String nickName, String email, String password, UserRole userRole) {
         this.name = name;
         this.nickName = nickName;
         this.email = email;
         this.password = password;
-        this.accountRole = accountRole;
+        this.userRole = userRole;
         this.createdAt = LocalDateTime.now();
     }
 

@@ -6,14 +6,14 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PostSearchReq {
+public class PostSearchRequest {
 
     private String title;
 
     private String content;
 
     @Builder
-    public PostSearchReq(String title, String content) {
+    public PostSearchRequest(String title, String content) {
         this.title = title;
         this.content = content;
     }

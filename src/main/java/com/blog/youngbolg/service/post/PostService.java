@@ -1,16 +1,16 @@
 package com.blog.youngbolg.service.post;
 
-import com.blog.youngbolg.domain.Account;
+import com.blog.youngbolg.domain.User;
 import com.blog.youngbolg.domain.Post;
 import com.blog.youngbolg.domain.PostEditor;
 import com.blog.youngbolg.exception.PostNotFound;
 import com.blog.youngbolg.exception.UserNotFound;
 import com.blog.youngbolg.repository.UserRepository;
 import com.blog.youngbolg.repository.post.PostRepository;
-import com.blog.youngbolg.request.post.PostCreateReq;
-import com.blog.youngbolg.request.post.PostEditReq;
-import com.blog.youngbolg.request.post.PostSearchReq;
+import com.blog.youngbolg.request.post.PostEditRequest;
+import com.blog.youngbolg.request.post.PostSearchRequest;
 import com.blog.youngbolg.response.PostResponse;
+import com.blog.youngbolg.service.post.request.PostCreateServiceRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -26,16 +26,15 @@ public class PostService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
 
-    public Post write(Long userId,PostCreateReq postCreateReq) {
-        Account account = userRepository.findById(userId)
+    /**
+     * 작성
+     */
+    public Post write(Long userId, PostCreateServiceRequest request) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(UserNotFound::new);
 
-        // postCreate -> Entity
-        Post post = Post.builder()
-                .title(postCreateReq.getTitle())
-                .content(postCreateReq.getContent())
-                .account(account)
-                .build();
+        Post result = request.toEntity();
+        Post post = Post.of(result, user);
 
         return postRepository.save(post);
     }
@@ -44,20 +43,16 @@ public class PostService {
         Post post = postRepository.findById(id)
                 .orElseThrow(PostNotFound::new);
 
-        return PostResponse.builder()
-                .id(post.getId())
-                .title(post.getTitle())
-                .content(post.getContent())
-                .build();
+        return PostResponse.of(post);
 
     }
 
-    public Page<PostResponse> getList(PostSearchReq postSearchReq, Pageable pageable) {
-        return postRepository.searchPost(postSearchReq, pageable);
+    public Page<PostResponse> getList(PostSearchRequest postSearchRequest, Pageable pageable) {
+        return postRepository.searchPost(postSearchRequest, pageable);
     }
 
     @Transactional
-    public void edit(Long id, PostEditReq postEdit) {
+    public void edit(Long id, PostEditRequest postEdit) {
         Post post = postRepository.findById(id)
                 .orElseThrow(PostNotFound::new);
 
