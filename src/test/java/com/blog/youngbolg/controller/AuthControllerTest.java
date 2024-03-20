@@ -1,6 +1,6 @@
 package com.blog.youngbolg.controller;
 
-import com.blog.youngbolg.domain.Account;
+import com.blog.youngbolg.domain.User;
 import com.blog.youngbolg.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,7 +38,7 @@ class AuthControllerTest {
     @DisplayName("회원가입")
     void Signup() throws Exception {
         // given
-        Account account = Account.builder()
+        User user = User.builder()
                 .name("김영광")
                 .nickName("글로리")
                 .email("dudrhkd4179@naver.com")
@@ -46,7 +46,7 @@ class AuthControllerTest {
                 .build();
 
         mockMvc.perform(post("/auth/signup")
-                        .content(objectMapper.writeValueAsString(account))
+                        .content(objectMapper.writeValueAsString(user))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print());

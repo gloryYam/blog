@@ -7,17 +7,7 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * {
- *     "code": "400",
- *     "message": "잘못된 요청입니다.",
- *     "validation": {
- *         "title": "값을 입력해주세요"
- *     }
- * }
- */
 @Data
-//@JsonInclude(value = JsonInclude.Include.NON_EMPTY) // 비어있지 않은 값만 내보내겠다.
 public class ErrorResponse {
 
     private final String code;

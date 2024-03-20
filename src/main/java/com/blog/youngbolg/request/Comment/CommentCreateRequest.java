@@ -1,12 +1,13 @@
 package com.blog.youngbolg.request.Comment;
 
+import com.blog.youngbolg.service.comment.request.CommentCreateServiceRequest;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class CommentCreateReq {
+public class CommentCreateRequest {
 
     @Size(min = 10, max = 500, message = "내용은 10~500글자로 입력해주세요.")
     @NotBlank(message = "내용을 입력해주세요.")
@@ -17,8 +18,15 @@ public class CommentCreateReq {
     private String password;
 
     @Builder
-    public CommentCreateReq(String password, String content) {
+    public CommentCreateRequest(String password, String content) {
         this.content = content;
         this.password = password;
+    }
+
+    public CommentCreateServiceRequest toServiceRequest() {
+        return CommentCreateServiceRequest.builder()
+            .content(content)
+            .password(password)
+            .build();
     }
 }

@@ -28,4 +28,12 @@ public class PostResponse {
         this.title = title;
         this.content = content;
     }
+
+    public static PostResponse of(Post post) {
+        return PostResponse.builder()
+            .id(post.getId())
+            .title(post.getTitle())
+            .content(post.getContent())
+            .build();
+    }
 }

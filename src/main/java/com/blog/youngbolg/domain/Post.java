@@ -27,16 +27,20 @@ public class Post extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private Account account;
+    private User user;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
     @Builder
-    public Post(String title, String content, Account account) {
+    private Post(String title, String content, User user) {
         this.title = title;
         this.content = content;
-        this.account = account;
+        this.user = user;
+    }
+
+    public static Post of(Post post, User user) {
+        return new Post(post.title, post.content, user);
     }
 
     public PostEditor.PostEditorBuilder toEditor() {
@@ -46,7 +50,7 @@ public class Post extends BaseTimeEntity {
     }
 
     public Long getUserId() {
-        return this.account.getId();
+        return this.user.getId();
     }
 
     public void edit(PostEditor postEditor) {

@@ -1,11 +1,11 @@
 package com.blog.youngbolg.controller;
 
 import com.blog.youngbolg.config.YoungMockUser;
-import com.blog.youngbolg.domain.Account;
+import com.blog.youngbolg.domain.User;
 import com.blog.youngbolg.domain.Post;
 import com.blog.youngbolg.repository.UserRepository;
 import com.blog.youngbolg.repository.post.PostRepository;
-import com.blog.youngbolg.request.post.PostCreateReq;
+import com.blog.youngbolg.request.post.PostCreateRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -55,7 +55,7 @@ class PostControllerTest {
     @YoungMockUser
     @DisplayName("/posts 요청시 title 값은 필수다")
     void test1() throws Exception {
-        PostCreateReq request = PostCreateReq.builder()
+        PostCreateRequest request = PostCreateRequest.builder()
                 .content("내용입니다.")
                 .build();
 
@@ -80,7 +80,7 @@ class PostControllerTest {
     @DisplayName("글 작성")
     void test2() throws Exception {
 
-        PostCreateReq request = PostCreateReq.builder()
+        PostCreateRequest request = PostCreateRequest.builder()
                 .title("제목입니다.")
                 .content("내용입니다.")
                 .build();
@@ -104,17 +104,17 @@ class PostControllerTest {
     @Test
     @DisplayName("글 1개 조회")
     void test3() throws Exception {
-        Account account = Account.builder()
+        User user = User.builder()
                 .name("김영광")
                 .email("dudrhkd4179@naver.com")
                 .password("1234")
                 .build();
-        userRepository.save(account);
+        userRepository.save(user);
         // given
         Post post = Post.builder()
                 .title("엔드")
                 .content("백엔드")
-                .account(account)
+                .account(user)
                 .build();
         postRepository.save(post);
 
@@ -131,19 +131,19 @@ class PostControllerTest {
     @Test
     @DisplayName("글 여러 개 조회")
     void test4() throws Exception {
-        Account account = Account.builder()
+        User user = User.builder()
                 .name("김영광")
                 .email("dudrhkd4179@naver.com")
                 .password("1234")
                 .build();
-        userRepository.save(account);
+        userRepository.save(user);
 
         // given
         List<Post> requestPosts = IntStream.range(0, 20)
                 .mapToObj(i -> Post.builder()
                         .title("블로그 제목 " + i)
                         .content("백엔드 " + i)
-                        .account(account)
+                        .account(user)
                         .build())
                 .collect(Collectors.toList());
 
@@ -162,19 +162,19 @@ class PostControllerTest {
     @Test
     @DisplayName("페이지를 0으로 요청하면 첫 페이지를 가져온다.")
     void test5() throws Exception {
-        Account account = Account.builder()
+        User user = User.builder()
                 .name("김영광")
                 .email("dudrhkd4179@naver.com")
                 .password("1234")
                 .build();
-        userRepository.save(account);
+        userRepository.save(user);
 
         // given
         List<Post> requestPosts = IntStream.range(0, 20)
                 .mapToObj(i -> Post.builder()
                         .title("블로그 제목 " + i)
                         .content("백엔드 " + i)
-                        .account(account)
+                        .account(user)
                         .build())
                 .collect(Collectors.toList());
 
@@ -194,13 +194,13 @@ class PostControllerTest {
     @YoungMockUser
     @DisplayName("게시글 삭제")
     void test6() throws Exception {
-        Account account = userRepository.findAll().get(0);
+        User user = userRepository.findAll().get(0);
 
         // given
         Post post = Post.builder()
                 .title("glory")
                 .content("안녕하세요")
-                .account(account)
+                .account(user)
                 .build();
 
         postRepository.save(post);

@@ -24,8 +24,6 @@ public class QComment extends EntityPathBase<Comment> {
 
     public final com.blog.youngbolg.common.QBaseTimeEntity _super = new com.blog.youngbolg.common.QBaseTimeEntity(this);
 
-    public final QAccount account;
-
     public final StringPath content = createString("content");
 
     //inherited
@@ -41,6 +39,8 @@ public class QComment extends EntityPathBase<Comment> {
     public final StringPath password = createString("password");
 
     public final QPost post;
+
+    public final QUser user;
 
     public QComment(String variable) {
         this(Comment.class, forVariable(variable), INITS);
@@ -60,8 +60,8 @@ public class QComment extends EntityPathBase<Comment> {
 
     public QComment(Class<? extends Comment> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.account = inits.isInitialized("account") ? new QAccount(forProperty("account")) : null;
         this.post = inits.isInitialized("post") ? new QPost(forProperty("post"), inits.get("post")) : null;
+        this.user = inits.isInitialized("user") ? new QUser(forProperty("user")) : null;
     }
 
 }

@@ -1,20 +1,29 @@
 <template>
-  <el-header class="header">
-    <el-menu mode="horizontal" router>
-      <el-menu-item index="/">Home</el-menu-item>
-      <el-menu-item index="/auth/write">글 작성</el-menu-item>
-      <el-menu-item index="/auth/login">로그인</el-menu-item>
-      <el-menu-item index="/auth/signup">회원가입</el-menu-item>
-    </el-menu>
-  </el-header>
+  <div class="header">
+    <img src="/images/logo.png" alt="logo" class="logo" />
+    <div class="title">Glory 블로그</div>
+  </div>
 </template>
 
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
-<style scoped>
+<style scoped lang="scss">
 .header {
-  padding: 0;
   height: 60px;
+  margin: 1rem 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo {
+  width: 52px;
+  object-fit: cover;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 300;
+  margin-left: 5px;
 }
 </style>

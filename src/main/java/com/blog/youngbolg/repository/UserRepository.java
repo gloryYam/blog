@@ -1,13 +1,13 @@
 package com.blog.youngbolg.repository;
 
-import com.blog.youngbolg.domain.Account;
+import com.blog.youngbolg.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<Account, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
-    Optional<Account> findByNickName(String nickName);
+    Optional<User> findByNickName(String nickName);
 
-    Optional<Account> findByEmail(String email);
+    Optional<User> findByEmail(String email);
 }

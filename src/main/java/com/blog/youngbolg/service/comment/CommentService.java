@@ -2,30 +2,47 @@ package com.blog.youngbolg.service.comment;
 
 import com.blog.youngbolg.domain.Comment;
 import com.blog.youngbolg.domain.Post;
+import com.blog.youngbolg.domain.User;
 import com.blog.youngbolg.exception.CommentNotFound;
 import com.blog.youngbolg.exception.InvalidPassword;
 import com.blog.youngbolg.exception.PostNotFound;
+import com.blog.youngbolg.exception.UserNotFound;
+import com.blog.youngbolg.repository.UserRepository;
 import com.blog.youngbolg.repository.comment.CommentRepository;
 import com.blog.youngbolg.repository.post.PostRepository;
-import com.blog.youngbolg.request.Comment.CommentDeleteReq;
+import com.blog.youngbolg.response.CommentResponse;
+import com.blog.youngbolg.service.comment.request.CommentCreateServiceRequest;
+import com.blog.youngbolg.service.comment.request.CommentDeleteServiceRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class CommentService {
 
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
 
-    public Long write(Comment comment, String password) {
-        passwordEncoder(comment, password);
-        return commentRepository.save(comment).getId();
+    @Transactional
+    public CommentResponse write(Long postId, CommentCreateServiceRequest request, Long userPrincipalId) {
+
+        Post post = findPostById(postId);
+        User user = findUserById(userPrincipalId);
+
+        String encryptedPassword = passwordEncoder.encode(request.getPassword());
+        Comment comment = Comment.of(user.getNickName(), request.getContent(), encryptedPassword, post);
+
+        Comment saveComment = commentRepository.save(comment);
+        return CommentResponse.of(saveComment);
     }
 
-    public void delete(Long id, CommentDeleteReq request) {
+    @Transactional
+    public void delete(Long id, CommentDeleteServiceRequest request) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(CommentNotFound::new);
 
@@ -37,18 +54,13 @@ public class CommentService {
         commentRepository.delete(comment);
     }
 
-    private void passwordEncoder(Comment comment, String password) {
-        String encode = passwordEncoder.encode(password);
-        comment.encodePassword(encode);
+    private User findUserById(Long userId) {
+        return userRepository.findById(userId)
+            .orElseThrow(UserNotFound::new);
     }
 
-    public Post postFindOne(Long id) {
-        return postRepository.findById(id)
-                .orElseThrow(PostNotFound::new);
-    }
-
-    public Comment commentFindOne(Long id) {
-        return commentRepository.findById(id)
-                .orElseThrow(CommentNotFound::new);
+    private Post findPostById(Long postId) {
+        return postRepository.findById(postId)
+            .orElseThrow(PostNotFound::new);
     }
 }

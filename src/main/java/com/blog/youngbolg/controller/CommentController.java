@@ -1,9 +1,9 @@
 package com.blog.youngbolg.controller;
 
 import com.blog.youngbolg.config.security.UserPrincipal;
-import com.blog.youngbolg.request.Comment.CommentCreateReq;
-import com.blog.youngbolg.request.Comment.CommentDeleteReq;
-import com.blog.youngbolg.service.comment.CommentFacade;
+import com.blog.youngbolg.request.Comment.CommentCreateRequest;
+import com.blog.youngbolg.request.Comment.CommentDeleteRequest;
+import com.blog.youngbolg.service.comment.CommentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,22 +15,21 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class CommentController {
 
-    private final CommentFacade commentFacade;
+    private final CommentService commentService;
 
     @PostMapping("/posts/{postId}/comments")
     public void write(@PathVariable Long postId,
-                      @RequestBody @Valid CommentCreateReq request,
+                      @RequestBody @Valid CommentCreateRequest request,
                       @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        commentFacade.write(postId, request, userPrincipal);
+
+        commentService.write(postId, request.toServiceRequest(), userPrincipal.getUserId());
     }
 
     @PostMapping("/comments/{commentId}/delete")
     public void delete(@PathVariable Long commentId,
-                       @RequestBody @Valid CommentDeleteReq request,
+                       @RequestBody @Valid CommentDeleteRequest request,
                        @AuthenticationPrincipal UserPrincipal userPrincipal) {
 
-        if(commentFacade.isAuthorized(commentId, userPrincipal)) {
-            commentFacade.delete(commentId, request);
-        }
+            commentService.delete(commentId, request.toServiceRequest());
     }
 }

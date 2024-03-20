@@ -4,7 +4,7 @@ import com.blog.youngbolg.config.YoungMockUser;
 import com.blog.youngbolg.domain.Post;
 import com.blog.youngbolg.repository.UserRepository;
 import com.blog.youngbolg.repository.post.PostRepository;
-import com.blog.youngbolg.request.post.PostCreateReq;
+import com.blog.youngbolg.request.post.PostCreateRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -84,7 +84,7 @@ public class PostControllerDocTest {
     @DisplayName("글 등록")
     void registration() throws Exception {
 
-        PostCreateReq request = PostCreateReq.builder()
+        PostCreateRequest request = PostCreateRequest.builder()
                 .title("ㅎㅇ")
                 .content("내용")
                 .build();

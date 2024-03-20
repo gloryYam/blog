@@ -1,15 +1,15 @@
 package com.blog.youngbolg.service;
 
 import com.blog.youngbolg.config.YoungMockUser;
-import com.blog.youngbolg.domain.Account;
+import com.blog.youngbolg.domain.User;
 import com.blog.youngbolg.domain.Post;
 import com.blog.youngbolg.exception.PostNotFound;
 import com.blog.youngbolg.repository.UserRepository;
 import com.blog.youngbolg.repository.post.PostRepository;
-import com.blog.youngbolg.request.post.PostCreateReq;
-import com.blog.youngbolg.request.post.PostEditReq;
+import com.blog.youngbolg.request.post.PostEditRequest;
 import com.blog.youngbolg.response.PostResponse;
 import com.blog.youngbolg.service.post.PostService;
+import com.blog.youngbolg.service.post.request.PostCreateServiceRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,21 +41,21 @@ class PostServiceTest {
     @DisplayName("글 작성")
     void test1() {
         // given
-        Account account = Account.builder()
+        User user = User.builder()
                 .name("김영광")
                 .nickName("글로리")
                 .email("dudrhkd4179@naver.com")
                 .password("1234")
                 .build();
-        userRepository.save(account);
+        userRepository.save(user);
 
-        PostCreateReq postCreateReq = PostCreateReq.builder()
+        PostCreateServiceRequest postCreateServiceRequest = PostCreateServiceRequest.builder()
                 .title("제목입니다.")
                 .content("내용입니다.")
                 .build();
 
         // when
-        postService.write(account.getId(), postCreateReq);
+        postService.write(user.getId(), postCreateServiceRequest);
 
         // then
         assertEquals(1L, postRepository.count());
@@ -125,7 +125,7 @@ class PostServiceTest {
 
         postRepository.save(post);
 
-        PostEditReq postEdit = PostEditReq.builder()
+        PostEditRequest postEdit = PostEditRequest.builder()
                 .title("백엔드")
                 .content("안녕하세요")
                 .build();
@@ -151,7 +151,7 @@ class PostServiceTest {
 
         postRepository.save(post);
 
-        PostEditReq postEdit = PostEditReq.builder()
+        PostEditRequest postEdit = PostEditRequest.builder()
                 .title(null)
                 .content("반갑습니다.")
                 .build();
@@ -236,7 +236,7 @@ class PostServiceTest {
 
         postRepository.save(post);
 
-        PostEditReq postEdit = PostEditReq.builder()
+        PostEditRequest postEdit = PostEditRequest.builder()
                 .title(null)
                 .content("반갑습니다.")
                 .build();

@@ -1,15 +1,14 @@
 package com.blog.youngbolg.service.auth;
 
-import com.blog.youngbolg.domain.Account;
+import com.blog.youngbolg.domain.User;
 import com.blog.youngbolg.exception.AlreadyExistsEmailException;
-import com.blog.youngbolg.exception.AlreadyExistsNickNameException;
-import com.blog.youngbolg.exception.UserNotFound;
 import com.blog.youngbolg.repository.UserRepository;
+import com.blog.youngbolg.response.SignResponse;
+import com.blog.youngbolg.service.auth.request.SignupServiceRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,31 +22,36 @@ public class AuthService {
      * 있으면 평문으로 온 패스워드와 db에 저장된 패스워드 검증
      */
 
-    public Long signup(Account account, String password2) {
-        checkDuplicateEmail(account);
-        checkDuplicateNickName(account);
+    public SignResponse signup(SignupServiceRequest request) {
+        User user = request.toEntity();
 
-        String encode = passwordEncoder.encode(account.getPassword());
-        account.Password(encode);
-        return userRepository.save(account).getId();
+        checkDuplicateEmail(user);
+        checkDuplicateNickName(user);
+
+        String encode = passwordEncoder.encode(user.getPassword());
+        user.Password(encode);
+        User saveUser = userRepository.save(user);
+
+        return SignResponse.of(saveUser);
     }
 
-    private void checkDuplicateNickName(Account account) {
-        Optional<Account> userNickName = userRepository.findByNickName(account.getNickName());
-        if(userNickName.isPresent()) {
-            throw new AlreadyExistsNickNameException();
-        }
+    public User findUserById(Long authId) {
+        return userRepository.findById(authId)
+            .orElseThrow(() -> new UsernameNotFoundException("해당 회원을 찾을 수 없습니다."));
     }
 
-    private void checkDuplicateEmail(Account account) {
-        Optional<Account> userEmail = userRepository.findByEmail(account.getEmail());
-        if(userEmail.isPresent()) {
-            throw new AlreadyExistsEmailException();
-        }
+    private void checkDuplicateEmail(User user) {
+        userRepository.findByEmail(user.getEmail())
+            .ifPresent(u -> {
+                throw new AlreadyExistsEmailException();
+            });
+
     }
 
-    public Account findOne(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(UserNotFound::new);
+    private void checkDuplicateNickName(User user) {
+        userRepository.findByNickName(user.getNickName())
+            .ifPresent(u -> {
+                throw new AlreadyExistsEmailException();
+            });
     }
 }

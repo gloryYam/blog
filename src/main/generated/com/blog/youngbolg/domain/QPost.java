@@ -24,8 +24,6 @@ public class QPost extends EntityPathBase<Post> {
 
     public final com.blog.youngbolg.common.QBaseTimeEntity _super = new com.blog.youngbolg.common.QBaseTimeEntity(this);
 
-    public final QAccount account;
-
     public final ListPath<Comment, QComment> comments = this.<Comment, QComment>createList("comments", Comment.class, QComment.class, PathInits.DIRECT2);
 
     public final StringPath content = createString("content");
@@ -39,6 +37,8 @@ public class QPost extends EntityPathBase<Post> {
     public final DateTimePath<java.time.LocalDateTime> modifyDate = _super.modifyDate;
 
     public final StringPath title = createString("title");
+
+    public final QUser user;
 
     public QPost(String variable) {
         this(Post.class, forVariable(variable), INITS);
@@ -58,7 +58,7 @@ public class QPost extends EntityPathBase<Post> {
 
     public QPost(Class<? extends Post> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.account = inits.isInitialized("account") ? new QAccount(forProperty("account")) : null;
+        this.user = inits.isInitialized("user") ? new QUser(forProperty("user")) : null;
     }
 
 }

@@ -1,8 +1,8 @@
 package com.blog.youngbolg.service.security;
 
 import com.blog.youngbolg.config.security.UserPrincipal;
-import com.blog.youngbolg.domain.Account;
-import com.blog.youngbolg.domain.AccountRole;
+import com.blog.youngbolg.domain.User;
+import com.blog.youngbolg.domain.UserRole;
 import com.blog.youngbolg.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,16 +23,16 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Account account = userRepository.findByEmail(email)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException(email + "을 찾을 수 없습니다."));
 
         List<GrantedAuthority> roles = new ArrayList<>();
 
         if("dudrhkd4179@naver.com".equals(email)) {
-            roles.add(new SimpleGrantedAuthority(AccountRole.ADMIN.getValue()));
+            roles.add(new SimpleGrantedAuthority(UserRole.ADMIN.getValue()));
         } else {
-            roles.add(new SimpleGrantedAuthority(AccountRole.USER.getValue()));
+            roles.add(new SimpleGrantedAuthority(UserRole.USER.getValue()));
         }
-        return new UserPrincipal(account, roles);
+        return new UserPrincipal(user, roles);
     }
 }
